@@ -122,8 +122,9 @@ listOfFiles, filesAmount = Find_name_amonut(rawFilesLocation)
 #--------------------------------------------------------------------------------------------------------------------
 #   Read -> Separate -> Record contents.
 #--------------------------------------------------------------------------------------------------------------------
+print("----------------------------------------------------------------------------------------------------------\n")
 for files in range(filesAmount):
-    
+
     #Dynamic opening.
     workbookVar = xlrd.open_workbook(rawFilesLocation + listOfFiles[files])   #for [xlrd] library
     readerVar = workbookVar.sheet_by_index(0)
@@ -153,7 +154,9 @@ for files in range(filesAmount):
             temp = str(readerVar.cell(workingRow, 5))[indexPicker]
 
         recordingOrder += 1
-
+    print(" completed (" + str(files + 1) + "/" + str(filesAmount) + ") : " + listOfFiles[files])
+#print("\n----------------------------------------------------------------------------------------------------------")
 #--------------------------------------------------------------------------------------------------------------------
 recorderWorkbook.save(filename = savePath)
-print("Successful yeah !")
+print("\n -> Finished.\n")
+print("----------------------------------------------------------------------------------------------------------")
