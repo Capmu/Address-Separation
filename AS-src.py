@@ -14,21 +14,23 @@ def xlsxCreate_TN_3AS_PC(savePath):
     workbook = Workbook()
     sheeto = workbook.active
 
-    sheeto["A1"] = "เบอร์โทรศัพท์"
-    sheeto["B1"] = "แขวง/ตำบล"
-    sheeto["C1"] = "เขต/อำเภอ"
-    sheeto["D1"] = "จังหวัด"
-    sheeto["E1"] = "รหัสไปรษณีย์"
+    sheeto["A1"] = "Tracking number"
+    sheeto["B1"] = "เบอร์โทรศัพท์"
+    sheeto["C1"] = "แขวง/ตำบล"
+    sheeto["D1"] = "เขต/อำเภอ"
+    sheeto["E1"] = "จังหวัด"
+    sheeto["F1"] = "รหัสไปรษณีย์"
 
-    sheeto.column_dimensions['A'].width = 15
     sheeto.row_dimensions[1].height = 20
-    sheeto.column_dimensions['B'].width = 24
+    sheeto.column_dimensions['A'].width = 18
+    sheeto.column_dimensions['B'].width = 15
     sheeto.column_dimensions['C'].width = 24
     sheeto.column_dimensions['D'].width = 24
-    sheeto.column_dimensions['E'].width = 18
+    sheeto.column_dimensions['E'].width = 24
+    sheeto.column_dimensions['F'].width = 18
     
     blue_fill = PatternFill(start_color='99FFFF', end_color='99FFFF', fill_type='solid')
-    for step in range(5):
+    for step in range(6):
         sheeto[Number_of_cell_alphabet(step + 1) + str(1)].fill = blue_fill
         sheeto[Number_of_cell_alphabet(step + 1) + str(1)].alignment = Alignment(horizontal='center', vertical='center')
 
@@ -142,12 +144,13 @@ for files in range(filesAmount):
                 temp = str(readerVar.cell(workingRow, 5))[indexPicker]
 
             if(i==0):
-                sheeto['A' + str(recordingOrder)] = str(readerVar.cell(workingRow, 4).value)
-                sheeto['D' + str(recordingOrder)] = strTemp[::-1]
+                sheeto['A' + str(recordingOrder)] = str(readerVar.cell(workingRow, 2).value)
+                sheeto['B' + str(recordingOrder)] = str(readerVar.cell(workingRow, 4).value)
+                sheeto['E' + str(recordingOrder)] = strTemp[::-1]
             elif(i==1):
-                sheeto['B' + str(recordingOrder)] = strTemp[::-1]
-            else:
                 sheeto['C' + str(recordingOrder)] = strTemp[::-1]
+            else:
+                sheeto['D' + str(recordingOrder)] = strTemp[::-1]
 
             strTemp = ""
             indexPicker -= 1
