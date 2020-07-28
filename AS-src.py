@@ -115,33 +115,32 @@ sheeto = recorderWorkbook.active
 #--------------------------------------------------------------------------------------------------------------------
 #   Read -> Separate -> Record contents.
 #--------------------------------------------------------------------------------------------------------------------
-testingRow = 1
-rowLength = len(str(readerVar.cell(testingRow,5)))
-strTemp = ""
-indexPicker = rowLength - 11 #11 because of the file's format (cutted a "thailand" text.)
-temp = str(readerVar.cell(testingRow,5))[indexPicker]
 print("-------------------------------------------------------------------------")
-for i in range(3):
-    while(temp != ' '):
-        strTemp = strTemp + temp
-        indexPicker -= 1
-        temp = str(readerVar.cell(testingRow,5))[indexPicker]
-    print(strTemp[::-1]) #[::-1] will reverse text in a string variable.
-
-    #sheeto[columnAlphabet + str(rowNumber)] = informationText
-    #workbook.save(filename = savePath)
-    #for example ------>
-    if(i==0):
-        sheeto['A' + '2'] = str(readerVar.cell(testingRow,4).value)
-        sheeto['D' + '2'] = strTemp[::-1]
-    elif(i==1):
-        sheeto['B' + '2'] = strTemp[::-1]
-    else:
-        sheeto['C' + '2'] = strTemp[::-1]
-
+for recordingStep in range (len(readerVar.col_values(0)) - 2):
+    workingRow = recordingStep + 1
+    addressLength = len(str(readerVar.cell(workingRow, 5)))
     strTemp = ""
-    indexPicker -= 1
-    temp = str(readerVar.cell(testingRow,5))[indexPicker]
+    indexPicker = addressLength - 11 #11 because of the file's format (cutted a "thailand" text.)
+    temp = str(readerVar.cell(workingRow, 5))[indexPicker]
+    for i in range(3):
+        while(temp != ' '):
+            strTemp = strTemp + temp
+            indexPicker -= 1
+            temp = str(readerVar.cell(workingRow, 5))[indexPicker]
+
+        #for example ------>
+        if(i==0):
+            sheeto['A' + str(workingRow + 1)] = str(readerVar.cell(workingRow, 4).value)
+            sheeto['D' + str(workingRow + 1)] = strTemp[::-1]
+        elif(i==1):
+            sheeto['B' + str(workingRow + 1)] = strTemp[::-1]
+        else:
+            sheeto['C' + str(workingRow + 1)] = strTemp[::-1]
+
+        strTemp = ""
+        indexPicker -= 1
+        temp = str(readerVar.cell(workingRow, 5))[indexPicker]
 
 #--------------------------------------------------------------------------------------------------------------------
 recorderWorkbook.save(filename = savePath)
+print("Successful yeah !")
