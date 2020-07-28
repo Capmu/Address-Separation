@@ -1,6 +1,7 @@
 #--------------------------------------------------------------------------------------------------------------------
 #   Define a Python library.
 #--------------------------------------------------------------------------------------------------------------------
+import os
 import xlrd #for read excel workbook [READ ONLY!]
 from openpyxl.styles import PatternFill, Alignment
 from openpyxl import Workbook, load_workbook
@@ -93,53 +94,65 @@ def Number_of_cell_alphabet(alphabetNumber):
     
     if thisAlphabet:
         return(thisAlphabet)
+def Find_name_amonut(path):
+
+    for files in os.walk(path): #for root, dirs, files in os.walk("./Checking File"):
+        for listOfFiles in files:
+            #Nothing.
+            pass
+
+    return(listOfFiles, len(listOfFiles))
 
 #--------------------------------------------------------------------------------------------------------------------
 #   Define a constant variables.
 #--------------------------------------------------------------------------------------------------------------------
-xlsName = "Pickuplist 2020-06-21.xls"
-xlsPath = "Excel files/" + xlsName
+rawFilesLocation = "Excel files/"
 savePath = "แยกข้อมูล.xlsx"
+recordingOrder = 2 #start recording at the second row.
 
 #--------------------------------------------------------------------------------------------------------------------
-#   Create & Open files.
+#   Create & Open & Prepair files.
 #--------------------------------------------------------------------------------------------------------------------
 xlsxCreate_TN_3AS_PC(savePath)
-
-workbookVar = xlrd.open_workbook(xlsPath)   #for [xlrd] library
-readerVar = workbookVar.sheet_by_index(0)
 
 recorderWorkbook = load_workbook(savePath)  #for [Openpyxl] library
 sheeto = recorderWorkbook.active
 
+listOfFiles, filesAmount = Find_name_amonut(rawFilesLocation)
 #--------------------------------------------------------------------------------------------------------------------
 #   Read -> Separate -> Record contents.
 #--------------------------------------------------------------------------------------------------------------------
-print("-------------------------------------------------------------------------")
-for recordingStep in range (len(readerVar.col_values(0)) - 2):
-    workingRow = recordingStep + 1
-    addressLength = len(str(readerVar.cell(workingRow, 5)))
-    strTemp = ""
-    indexPicker = addressLength - 11 #11 because of the file's format (cutted a "thailand" text.)
-    temp = str(readerVar.cell(workingRow, 5))[indexPicker]
-    for i in range(3):
-        while(temp != ' '):
-            strTemp = strTemp + temp
+for files in range(filesAmount):
+    
+    #Dynamic opening.
+    workbookVar = xlrd.open_workbook(rawFilesLocation + listOfFiles[files])   #for [xlrd] library
+    readerVar = workbookVar.sheet_by_index(0)
+
+    for recordingStep in range (len(readerVar.col_values(0)) - 2):
+        workingRow = recordingStep + 1
+        addressLength = len(str(readerVar.cell(workingRow, 5)))
+        strTemp = ""
+        indexPicker = addressLength - 11 #11 because of the file's format (cutted a "thailand" text.)
+        temp = str(readerVar.cell(workingRow, 5))[indexPicker]
+        for i in range(3):
+            while(temp != ' '):
+                strTemp = strTemp + temp
+                indexPicker -= 1
+                temp = str(readerVar.cell(workingRow, 5))[indexPicker]
+
+            if(i==0):
+                sheeto['A' + str(recordingOrder)] = str(readerVar.cell(workingRow, 4).value)
+                sheeto['D' + str(recordingOrder)] = strTemp[::-1]
+            elif(i==1):
+                sheeto['B' + str(recordingOrder)] = strTemp[::-1]
+            else:
+                sheeto['C' + str(recordingOrder)] = strTemp[::-1]
+
+            strTemp = ""
             indexPicker -= 1
             temp = str(readerVar.cell(workingRow, 5))[indexPicker]
 
-        #for example ------>
-        if(i==0):
-            sheeto['A' + str(workingRow + 1)] = str(readerVar.cell(workingRow, 4).value)
-            sheeto['D' + str(workingRow + 1)] = strTemp[::-1]
-        elif(i==1):
-            sheeto['B' + str(workingRow + 1)] = strTemp[::-1]
-        else:
-            sheeto['C' + str(workingRow + 1)] = strTemp[::-1]
-
-        strTemp = ""
-        indexPicker -= 1
-        temp = str(readerVar.cell(workingRow, 5))[indexPicker]
+        recordingOrder += 1
 
 #--------------------------------------------------------------------------------------------------------------------
 recorderWorkbook.save(filename = savePath)
