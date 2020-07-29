@@ -223,7 +223,7 @@ for aP in province:
 rankingSheet = [sheeto_SD, sheeto_D, sheeto_P]
 rankingDic = [subDistrict_dic, district_dic, province_dic]
 
-for rankingType in range(1):
+for rankingType in range(3):
     rank = 1
     for candidate in rankingDic[rankingType]:
         rankingSheet[rankingType]['A'+str(rank+1)] = rank
