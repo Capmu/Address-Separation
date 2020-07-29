@@ -5,6 +5,8 @@ import os
 import xlrd #for read excel workbook [READ ONLY!]
 from openpyxl.styles import PatternFill, Alignment
 from openpyxl import Workbook, load_workbook
+import operator
+import collections
 
 #--------------------------------------------------------------------------------------------------------------------
 #   Define a Functions
@@ -183,6 +185,19 @@ sheeto_D["B1"] = "เขต"
 sheeto_P["B1"] = "จังหวัด"
 sheeto_SD["C1"], sheeto_D["C1"], sheeto_P["C1"] = "จำนวนลูกค้า", "จำนวนลูกค้า", "จำนวนลูกค้า"
 
+#sheet styling
+rankingSheet = [sheeto_SD, sheeto_D, sheeto_P]
+
+blue_fill = PatternFill(start_color='99FFFF', end_color='99FFFF', fill_type='solid')
+
+for sheetTopic in rankingSheet:
+    sheetTopic.row_dimensions[1].height = 20
+    sheetTopic.column_dimensions['B'].width = 24
+    sheetTopic.column_dimensions['C'].width = 18
+    for step in range(3):
+        sheetTopic[Number_of_cell_alphabet(step + 1) + str(1)].fill = blue_fill
+        sheetTopic[Number_of_cell_alphabet(step + 1) + str(1)].alignment = Alignment(horizontal='center', vertical='center')
+
 #list variables
 subDistrict = []
 district = []
@@ -218,17 +233,22 @@ for aP in province:
   else:
     province_dic[aP] = 1
 
-#Fill in excel-----------------------------------------------------------------
+#pre-processing before fill into the cell | sorting by customer amount.
+subDistrict_dic_sorted = collections.OrderedDict(sorted(subDistrict_dic.items(), key=operator.itemgetter(1), reverse=True))
+district_dic_sorted = collections.OrderedDict(sorted(district_dic.items(), key=operator.itemgetter(1), reverse=True))
+province_dic_sorted = collections.OrderedDict(sorted(province_dic.items(), key=operator.itemgetter(1), reverse=True))
 
-rankingSheet = [sheeto_SD, sheeto_D, sheeto_P]
-rankingDic = [subDistrict_dic, district_dic, province_dic]
+
+#Fill in excel-----------------------------------------------------------------
+rankingSortedDic = [subDistrict_dic_sorted, district_dic_sorted, province_dic_sorted]
 
 for rankingType in range(3):
     rank = 1
-    for candidate in rankingDic[rankingType]:
+    for candidate in rankingSortedDic[rankingType]:
         rankingSheet[rankingType]['A'+str(rank+1)] = rank
+        rankingSheet[rankingType]['A'+str(rank+1)].alignment = Alignment(horizontal='center')
         rankingSheet[rankingType]['B'+str(rank+1)] = candidate
-        rankingSheet[rankingType]['C'+str(rank+1)] = rankingDic[rankingType].get(candidate)
+        rankingSheet[rankingType]['C'+str(rank+1)] = rankingSortedDic[rankingType].get(candidate)
         rank += 1
 
 recorderWorkbook.save(filename = savePath)
