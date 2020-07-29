@@ -167,7 +167,57 @@ print("-------------------------------------------------------------------------
 #--------------------------------------------------------------------------------------------------------------------
 #   Data Analysis || Additional fuction.
 #--------------------------------------------------------------------------------------------------------------------
+
+#create 3 sheets
 recorderWorkbook.create_sheet("อันดับ-แขวง")
-sheeto = recorderWorkbook["อันดับ-แขวง"]
+recorderWorkbook.create_sheet("อันดับ-เขต")
+recorderWorkbook.create_sheet("อันดับ-จังหวัด")
+sheeto_SD = recorderWorkbook["อันดับ-แขวง"]
+sheeto_D = recorderWorkbook["อันดับ-เขต"]
+sheeto_P = recorderWorkbook["อันดับ-จังหวัด"]
+
+#list variables
+subDistrict = []
+district = []
+province = []
+
+#dictionary variables
+subDistrict_dic = {}
+district_dic = {}
+province_dic = {}
+
+#fill data to 3 lists
+for order in range(recordingOrder):
+    subDistrict.append(sheeto['C'+ str(order+2)].value)
+    district.append(sheeto['D'+ str(order+2)].value)
+    province.append(sheeto['E'+ str(order+2)].value)
+
+#fill data to 3 dictionaries
+for aSD in subDistrict:
+  if aSD in subDistrict_dic:
+    subDistrict_dic[aSD] += 1
+  else:
+    subDistrict_dic[aSD] = 1
+
+for aD in district:
+  if aD in district_dic:
+    district_dic[aD] += 1
+  else:
+    district_dic[aD] = 1
+
+for aP in province:
+  if aP in province_dic:
+    province_dic[aP] += 1
+  else:
+    province_dic[aP] = 1
+
+#------------------------------------------> Monitor
+print(len(subDistrict))
+print(len(district))
+print(len(province))
+
+print(subDistrict_dic)
+print(district_dic)
+print(province_dic)
 
 recorderWorkbook.save(filename = savePath)
