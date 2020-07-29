@@ -163,3 +163,11 @@ for files in range(filesAmount):
 recorderWorkbook.save(filename = savePath)
 print("\n -> Finished.\n")
 print("----------------------------------------------------------------------------------------------------------")
+
+#--------------------------------------------------------------------------------------------------------------------
+#   Data Analysis || Additional fuction.
+#--------------------------------------------------------------------------------------------------------------------
+recorderWorkbook.create_sheet("อันดับ-แขวง")
+sheeto = recorderWorkbook["อันดับ-แขวง"]
+
+recorderWorkbook.save(filename = savePath)
