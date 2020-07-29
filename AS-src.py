@@ -172,9 +172,16 @@ print("-------------------------------------------------------------------------
 recorderWorkbook.create_sheet("อันดับ-แขวง")
 recorderWorkbook.create_sheet("อันดับ-เขต")
 recorderWorkbook.create_sheet("อันดับ-จังหวัด")
+
 sheeto_SD = recorderWorkbook["อันดับ-แขวง"]
 sheeto_D = recorderWorkbook["อันดับ-เขต"]
 sheeto_P = recorderWorkbook["อันดับ-จังหวัด"]
+
+sheeto_SD["A1"], sheeto_D["A1"], sheeto_P["A1"] = "อันดับ", "อันดับ", "อันดับ"
+sheeto_SD["B1"] = "แขวง"
+sheeto_D["B1"] = "เขต"
+sheeto_P["B1"] = "จังหวัด"
+sheeto_SD["C1"], sheeto_D["C1"], sheeto_P["C1"] = "จำนวนลูกค้า", "จำนวนลูกค้า", "จำนวนลูกค้า"
 
 #list variables
 subDistrict = []
@@ -211,13 +218,17 @@ for aP in province:
   else:
     province_dic[aP] = 1
 
-#------------------------------------------> Monitor
-print(len(subDistrict))
-print(len(district))
-print(len(province))
+#Fill in excel-----------------------------------------------------------------
 
-print(subDistrict_dic)
-print(district_dic)
-print(province_dic)
+rankingSheet = [sheeto_SD, sheeto_D, sheeto_P]
+rankingDic = [subDistrict_dic, district_dic, province_dic]
+
+for rankingType in range(1):
+    rank = 1
+    for candidate in rankingDic[rankingType]:
+        rankingSheet[rankingType]['A'+str(rank+1)] = rank
+        rankingSheet[rankingType]['B'+str(rank+1)] = candidate
+        rankingSheet[rankingType]['C'+str(rank+1)] = rankingDic[rankingType].get(candidate)
+        rank += 1
 
 recorderWorkbook.save(filename = savePath)
